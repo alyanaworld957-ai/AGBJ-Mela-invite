@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="sd" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>گُرو بالپوري ميلو — پروگرام دعوت</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;600;700&display=swap');
+
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#070614}
+body{font-family:'Noto Naskh Arabic',serif;color:#fff}
+.app{position:relative;width:100%;height:100%;overflow:hidden}
+
+.scene{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  opacity:0;visibility:hidden;transform:scale(1.035);
+  transition:opacity .75s ease,transform .75s ease;
+}
+.scene.active{opacity:1;visibility:visible;transform:scale(1)}
+
+.bg{
+  position:absolute;inset:0;
+  background-image:linear-gradient(180deg,rgba(4,3,18,.38),rgba(5,2,16,.72)),
+                    url("mela_template.jpg");
+  background-size:cover;background-position:center;
+  animation:slowZoom 14s ease-in-out infinite alternate;
+}
+@keyframes slowZoom{to{transform:scale(1.07)}}
+
+.glow{
+  position:absolute;inset:-20%;
+  background:
+    radial-gradient(circle at 25% 20%,rgba(255,220,92,.17),transparent 25%),
+    radial-gradient(circle at 75% 70%,rgba(110,80,255,.20),transparent 28%);
+  animation:floatGlow 7s ease-in-out infinite alternate;
+}
+@keyframes floatGlow{to{transform:translate(2%,-2%) scale(1.03)}}
+
+.particles{
+  position:absolute;inset:0;pointer-events:none;opacity:.35;
+  background-image:radial-gradient(#fff 1px,transparent 1px);
+  background-size:48px 48px;
+  animation:stars 13s linear infinite;
+}
+@keyframes stars{to{background-position:0 48px}}
+
+.panel{
+  position:relative;z-index:3;width:min(91%,590px);max-height:88vh;overflow:auto;
+  padding:25px 20px;border-radius:28px;text-align:center;
+  background:linear-gradient(145deg,rgba(17,8,38,.76),rgba(5,7,28,.69));
+  border:1.5px solid rgba(255,220,104,.75);
+  box-shadow:0 0 45px rgba(255,186,35,.22),inset 0 0 30px rgba(255,255,255,.035);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+}
+.panel::-webkit-scrollbar{width:0}
+
+.om{font-size:52px;color:#ffd45a;text-shadow:0 0 24px #ffb000}
+.kicker{
+  display:inline-block;padding:5px 18px;border-radius:999px;
+  border:1px solid #ffd86b;background:#7c1713dd;color:#ffeab0;
+  font-size:17px
+}
+h1{
+  margin:9px 0;color:#ffd968;font-size:clamp(34px,9vw,57px);
+  line-height:1.18;text-shadow:0 3px 0 #651700,0 0 18px #ffb52c;
+}
+h2{color:#ffe07a;font-size:31px;margin:5px 0 12px}
+p{font-size:21px;line-height:1.7;margin:8px 0;text-shadow:0 2px 5px #000}
+.small{font-size:16px;color:#ffe8b0}
+.gold{
+  color:#ffe77a;font-weight:700;
+}
+.red{color:#ffb5a9}
+.divider{height:2px;margin:14px auto;background:linear-gradient(90deg,transparent,#ffd35a,transparent)}
+.schedule{
+  display:grid;gap:11px;margin-top:12px;text-align:right;
+}
+.event{
+  padding:13px 15px;border-radius:18px;
+  background:rgba(255,246,210,.94);color:#4b160e;
+  border:2px solid #e1ae38;box-shadow:0 5px 20px #0005;
+}
+.event strong{display:block;color:#a51b12;font-size:22px;margin-bottom:3px}
+.event span{font-size:18px;font-weight:600}
+.hero{
+  padding:16px;border-radius:24px;
+  background:linear-gradient(135deg,#7b160fdd,#27134add);
+  border:2px solid #ffd65e;
+  box-shadow:0 0 30px #ffbf3328;
+}
+.drama{
+  font-size:clamp(43px,11vw,70px);font-weight:700;
+  color:#fff3b0;letter-spacing:1px;
+  text-shadow:0 4px 0 #75140e,0 0 28px #ffb629;
+}
+.poetry{
+  margin-top:14px;padding:13px;border-radius:18px;
+  background:#160a2599;border:1px solid #ffd96b66;
+  color:#ffe9b8;font-size:21px;line-height:1.9
+}
+.heart{
+  font-family:Arial,sans-serif;direction:ltr;
+  font-size:clamp(36px,10vw,66px);font-weight:800;
+  color:#fff;text-shadow:0 0 18px #ff4c4c;
+  margin:10px 0
+}
+.heart b{color:#ff3434}
+.hawan{
+  border:2px solid #f4c24f;border-radius:22px;padding:17px;
+  background:linear-gradient(135deg,#3b170bd9,#130914e8);
+}
+.flame{font-size:50px;animation:flame 1s ease-in-out infinite alternate}
+@keyframes flame{to{transform:scale(1.08) translateY(-3px)}}
+
+.btn{
+  border:0;border-radius:999px;padding:12px 24px;margin-top:15px;
+  font:700 18px 'Noto Naskh Arabic',serif;cursor:pointer;
+  background:linear-gradient(#ffe87d,#dc9417);color:#5d2100;
+  box-shadow:0 7px 20px #0007
+}
+.nav{
+  position:absolute;z-index:20;left:14px;right:14px;bottom:25px;
+  display:flex;justify-content:space-between;pointer-events:none
+}
+.nav button{
+  pointer-events:auto;width:45px;height:45px;border-radius:50%;
+  border:1px solid #fff6;background:#05050aaa;color:white;font-size:30px
+}
+.progress{
+  position:absolute;z-index:20;bottom:10px;left:50%;
+  transform:translateX(-50%);display:flex;gap:5px
+}
+.dot{width:7px;height:7px;border-radius:50%;background:#fff5}
+.dot.on{width:21px;border-radius:5px;background:#ffd354}
+
+@media(max-height:650px){
+ .panel{padding:17px 15px}.panel p{font-size:17px}
+ h1{font-size:36px}.event{padding:9px}.event strong{font-size:18px}.event span{font-size:15px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<section class="scene active">
+  <div class="bg"></div><div class="glow"></div><div class="particles"></div>
+  <div class="panel">
+    <div class="om">ॐ</div>
+    <div class="kicker">🌺 گُرو بالپوري ميلو 2026 🌺</div>
+    <h1>دل جي گهرائين سان<br>دعوت ڏيون ٿا</h1>
+    <div class="divider"></div>
+    <p>اچو ته گڏجي گُرو بالپوري جي ميلي جون خوشيون، عقيدت ۽ سنڌي ثقافت جا رنگ ملهايون. ❤️🙏</p>
+    <div class="heart">I <b>♥</b> GURU BALPURI</div>
+    <p class="small">4، 5 ۽ 6 آڪٽوبر 2026<br>گران آشرم — ميلو اوهان جو منتظر آهي</p>
+    <button class="btn" onclick="go(1)">پروگرام ڏسو ✨</button>
+  </div>
+</section>
+
+<section class="scene">
+  <div class="bg"></div><div class="glow"></div><div class="particles"></div>
+  <div class="panel">
+    <div class="kicker">📅 پهريون ڏينهن</div>
+    <h1>4 آڪٽوبر 2026</h1>
+    <h2>آچر — افتتاحي ڏينهن</h2>
+    <div class="divider"></div>
+    <div class="schedule">
+      <div class="event"><strong>صبح 9:30 وڳي</strong><span>گُرو بالپوري درٻار جي شروعات ۽ عقيدت ڀري محفل</span></div>
+      <div class="event"><strong>دعائن ۽ آجيان</strong><span>مهمانن، عقيدتمندن ۽ ياترين لاءِ ڀليڪار</span></div>
+      <div class="event"><strong>ميلو ۽ ثقافتي رنگ</strong><span>پيار، ڀائيچارو، خدمت ۽ خوشين سان گڏ ميلو جاري رهندو</span></div>
+    </div>
+    <p class="small">* وقت ۽ پروگرام جا تفصيل پوسٽر ۾ ڏنل شيڊول مطابق رکيا ويا آهن.</p>
+    <button class="btn" onclick="go(2)">اڳيون ڏينهن ➜</button>
+  </div>
+</section>
+
+<section class="scene">
+  <div class="bg"></div><div class="glow"></div><div class="particles"></div>
+  <div class="panel">
+    <div class="kicker">🎭 ٻيو ڏينهن</div>
+    <h1>5 آڪٽوبر 2026</h1>
+    <h2>سومر — خاص پروگرام</h2>
+    <div class="divider"></div>
+    <div class="event"><strong>رات 12 وڳي</strong><span>گُرو بالپوري سان لاڳاپيل خاص پروگرام ۽ روحاني رنگ</span></div>
+    <div class="hero" style="margin-top:14px">
+      <div class="kicker">⭐ خاص اسٽيج پيشڪش ⭐</div>
+      <div class="drama">WRONG WAY</div>
+      <p class="gold">هڪ دلچسپ اسٽيج ڊرامو — ضرور ڏسجو!</p>
+    </div>
+    <div class="poetry">
+      ميلي جي رنگن ۾ دل خوش ٿي وڃي،<br>
+      گُرو جي نالي سان هر گهڙي روشن ٿي وڃي. 🌹<br>
+      گڏ هلون محبت ۽ ڀائيچاري جي راهه،<br>
+      خوشين سان ڀرجي هر دل جي نگاهه. ❤️
+    </div>
+    <button class="btn" onclick="go(3)">آخري ڏينهن ➜</button>
+  </div>
+</section>
+
+<section class="scene">
+  <div class="bg"></div><div class="glow"></div><div class="particles"></div>
+  <div class="panel">
+    <div class="kicker">🔥 ٽيون ۽ آخري ڏينهن</div>
+    <h1>6 آڪٽوبر 2026</h1>
+    <h2>اڱارو — هَوَن جو خاص پروگرام</h2>
+    <div class="divider"></div>
+    <div class="event"><strong>صبح 10 وڳي</strong><span>خاص هَوَن ۽ روحاني پروگرام</span></div>
+    <div class="hawan" style="margin-top:14px">
+      <div class="flame">🔥</div>
+      <h2>هَوَن ڪُنڊ جي اهميت</h2>
+      <p>هَوَن ڪُنڊ هندو ثقافت ۾ پاڪيزگي، دعا، شڪرگذاري ۽ خير و برڪت سان جڙيل هڪ اهم روحاني روايت طور ملهايو ويندو آهي.</p>
+      <p>هن مقدس موقعي تي سڪون، سلامتي، خوشحالي ۽ سڀني لاءِ ڀلائي جون دعائون ڪيون وينديون. 🙏</p>
+    </div>
+    <button class="btn" onclick="go(4)">آخري پيغام ❤️</button>
+  </div>
+</section>
+
+<section class="scene">
+  <div class="bg"></div><div class="glow"></div><div class="particles"></div>
+  <div class="panel">
+    <div class="om">ॐ</div>
+    <div class="heart">I <b>♥</b> GURU BALPURI</div>
+    <h1>اچو ته ميلو گڏجي ملهايون</h1>
+    <div class="divider"></div>
+    <p>هن مقدس در تي اچي پنهنجي محبت، عقيدت ۽ حاضريءَ سان ميلي جون خوشيون ٻيڻيون ڪريو.</p>
+    <div class="hero">
+      <h2>هن در تي اچي<br>پنهنجو ڀاڳ سنواريو ❤️🙏</h2>
+      <p>اوهان جي اچڻ سان هي ميلو وڌيڪ حسين ٿيندو.</p>
+    </div>
+    <p class="poetry">گُرو جي در تي جيڪو اچي، سو خالي نه موٽي،<br>محبت جي روشني دل ۾ سدائين جوتي. 🌺</p>
+    <button class="btn" onclick="go(0)">شروع کان ٻيهر 🔄</button>
+  </div>
+</section>
+
+<div class="nav">
+  <button onclick="prev()">‹</button>
+  <button onclick="next()">›</button>
+</div>
+<div class="progress" id="progress"></div>
+</div>
+
+<script>
+const scenes=[...document.querySelectorAll('.scene')];
+let cur=0;
+const progress=document.getElementById('progress');
+scenes.forEach((_,i)=>{
+  const d=document.createElement('span');
+  d.className='dot'+(i===0?' on':'');
+  progress.appendChild(d);
+});
+function render(){
+  scenes.forEach((s,i)=>s.classList.toggle('active',i===cur));
+  [...progress.children].forEach((d,i)=>d.classList.toggle('on',i===cur));
+}
+function go(i){cur=Math.max(0,Math.min(scenes.length-1,i));render()}
+function next(){go(cur+1)}
+function prev(){go(cur-1)}
+
+let startX=0;
+document.addEventListener('touchstart',e=>startX=e.touches[0].clientX,{passive:true});
+document.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-startX;
+  if(Math.abs(dx)>55) dx<0?next():prev();
+},{passive:true});
+
+// Auto-advance every 7 seconds for a reel-like invitation.
+let timer=setInterval(()=>next(),7000);
+document.addEventListener('touchstart',()=>{clearInterval(timer);timer=null},{once:true});
+</script>
+</body>
+</html>
